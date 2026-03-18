@@ -1,40 +1,31 @@
-# Important
+# ShellForge
 
-I am not maintaing this sample app, and it has a number of bugs, among them the IO Integration with SSH 
-which cause data to be lost, and thus the rendering is incorrect when it produces a lot of data.
+**The AI-native SSH terminal for iOS.** Built for people who live in the terminal and want their phone to be a first-class citizen.
 
+## v1.0 Features
 
-# SwiftTermApp
+- **AI-Native Terminal** — Inline AI: explain errors, translate natural language to commands, suggest fixes
+- **Visual tmux Manager** — See sessions as a grid, tap to attach, preview pane content
+- **One-Tap Connect** — Home screen widgets, auto-tmux-reattach, zero-friction server access
+- **Colour Themes** — Solarized Dark, Dracula, Nord, Monokai
+- **Keyboard Accessory Bar** — Ctrl, Alt, Esc, Tab, arrows, pipe, tilde
+- **Multiple Concurrent Sessions** — Swipe to switch between terminals
+- **OSC 52 Clipboard Sync** — Server to iPhone clipboard
+- **Haptic Feedback** — Native iOS feel
 
-SwiftTermApp is a terminal emulator and SSH client application for iOS
-using the [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm) engine and written in SwiftUI. It is the open 
-core of [La Terminal](https://apps.apple.com/us/app/la-terminal-ssh-client/id1629902861), available in the 
-App Store for iPhone and iPad.
+## Tech Stack
 
-This repository is not actively updated, but you can still use it as sample code, but I wont like be fixing
-or updating it.
+- **SwiftUI** (iOS 17+)
+- **SwiftTerm** — Terminal emulator engine (MIT)
+- **swift-nio-ssh** — SSH transport (Apache 2.0, Apple-maintained)
+- **SwiftData** — Host/key persistence
+- **iOS Keychain** — Credential storage
+- **WidgetKit** — Home screen widgets
 
+## Acknowledgements
 
-Some of the features:
-* Comprehensive terminal emulator, based on SwiftTerm - which is both very comprehensive in terms of emulation, 
-  and has extensive support for international terminals, both for generated output as well as the support for
-  iOS input methods for dictation and international input.
-* Supports for keys stored on the secure enclave, so your private key can never be found in plain text.
-* Themable user interface:
-  * Using the user interface provided or
-  * Programatically, through the terminal support for configuring colors dynamically.
-* Metal shaders for some cool live effects
+ShellForge is forked from [SwiftTermApp](https://github.com/migueldeicaza/SwiftTermApp) by Miguel de Icaza (MIT license). Terminal emulation powered by [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm).
 
-![Screenshot](https://user-images.githubusercontent.com/36863/81033655-645d5980-8e62-11ea-91c5-1d8b1931c7ce.png)
+## License
 
-![Screenshot](https://user-images.githubusercontent.com/36863/82780270-a441ac00-9e24-11ea-9ee1-e32357e8ab58.png)
-
-Animated Metal Backgrounds:
-
-<img width="602" alt="image" src="https://user-images.githubusercontent.com/36863/119248021-3d042800-bb5c-11eb-964b-206e33bc4989.png">
-
-Configure your settings:
-
-<img width="396" alt="image" src="https://user-images.githubusercontent.com/36863/119248029-4f7e6180-bb5c-11eb-9b4b-b3432dc0b1eb.png">
-
-Some icons are from FontAwesome
+MIT — see [LICENSE](LICENSE)
