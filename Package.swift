@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "ShellForge",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v17)
     ],
@@ -18,6 +19,9 @@ let package = Package(
                 .product(name: "NIOSSH", package: "swift-nio-ssh"),
             ],
             path: "Sources/ShellForge",
+            exclude: [
+                "Resources/Info.plist"
+            ],
             resources: [
                 .process("Resources")
             ]
