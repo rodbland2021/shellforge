@@ -1,4 +1,5 @@
 import Foundation
+import Network
 import NIOCore
 import NIOPosix
 import NIOSSH
@@ -31,6 +32,7 @@ final class SSHConnection {
         rows: Int = 24
     ) async throws {
         state = .connecting
+        lastConnectionParams = (host, port, username, authDelegate, terminalView, cols, rows)
 
         let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         self.group = group
@@ -130,14 +132,49 @@ final class SSHConnection {
         return collector.output
     }
 
+    // MARK: - Network Monitoring
+
+    private var pathMonitor: NWPathMonitor?
+    private var lastConnectionParams: (host: String, port: Int, username: String, authDelegate: NIOSSHClientUserAuthenticationDelegate, terminalView: TerminalView?, cols: Int, rows: Int)?
+
+    /// Start monitoring network changes for auto-reconnect
+    func startNetworkMonitoring() {
+        pathMonitor = NWPathMonitor()
+        pathMonitor?.pathUpdateHandler = { [weak self] path in
+            guard let self, path.status == .satisfied else { return }
+            if case .disconnected = self.state, self.lastConnectionParams != nil {
+                Task { try? await self.reconnect() }
+            }
+        }
+        pathMonitor?.start(queue: DispatchQueue(label: "shellforge.network-monitor"))
+    }
+
+    /// Reconnect using last connection parameters
+    private func reconnect() async throws {
+        guard let params = lastConnectionParams else { return }
+        try await connect(
+            host: params.host, port: params.port,
+            username: params.username, authDelegate: params.authDelegate,
+            terminalView: params.terminalView, cols: params.cols, rows: params.rows
+        )
+    }
+
+    /// Stop network monitoring
+    func stopNetworkMonitoring() {
+        pathMonitor?.cancel()
+        pathMonitor = nil
+    }
+
     /// Disconnect and clean up
     func disconnect() {
+        stopNetworkMonitoring()
         sessionChannel?.close(promise: nil)
         parentChannel?.close(promise: nil)
         try? group?.syncShutdownGracefully()
         group = nil
         sessionChannel = nil
         parentChannel = nil
+        lastConnectionParams = nil
         state = .disconnected
     }
 }
